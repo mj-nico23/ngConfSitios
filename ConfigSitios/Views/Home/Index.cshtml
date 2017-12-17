@@ -1,0 +1,119 @@
+﻿@model ConfigSitios.Models.SitiosViewModel
+
+@{
+    ViewBag.Title = "Configurar Sitios";
+}
+
+<div class="row">
+    @using (Html.BeginForm("", "Home", FormMethod.Post, new { id = "sitioForm", name = "sitioForm" }))
+    {
+        <div class="">
+            <div class="form-group">
+                <label class="col-sm-offset-4 col-xs-1 control-label" style="padding-top: 7px">Sitio</label>
+                <div class="col-xs-7">
+                    @Html.DropDownList("sitio", new SelectList(Model.Sitios), "<Seleccionar>", new { @class = "form-control", onchange = "SelectedIndexChanged()" })
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (Model.DatosSitio != null)
+{
+
+    <div class="row">
+        <hr />
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel @(Model.DatosSitio.INI ? "panel-success" : "panel-danger")">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="display: inline-block; height: 35px">Configuración INI</h3>
+                    @if (!Model.DatosSitio.INI)
+                    {
+                        <div class="btn-group pull-right" style="padding-bottom: 20px">
+                            @using (Html.BeginForm("Arreglar", "Home", FormMethod.Post, new { id = "arreglarINIForm", name = "arreglarINIForm" }))
+                            {
+                                <input type="hidden" name="sitio" value="@Model.sitio">
+                                <a href="#" class="btn btn-success" title="Arreglar" onclick="ArreglarSitio()"><span class="glyphicon glyphicon-refresh"></span></a>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Servidor: @Model.DatosSitio.INI_Servidor
+                    </p>
+                    <p>
+                        Base de Datos: @Model.DatosSitio.INI_BD
+                    </p>
+                    <p>
+                        Path Tmp: @Model.DatosSitio.INI_Tmp
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel @(Model.DatosSitio.ODBC ? "panel-success" : "panel-danger")">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="display: inline-block; height: 35px">Configuración ODBC</h3>
+                    @if (!Model.DatosSitio.ODBC)
+                    {
+                        <div class="btn-group pull-right" style="padding-bottom: 20px">
+                            <a href="#" class="btn btn-success" title="Arreglar"><span class="glyphicon glyphicon-refresh"></span></a>
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Nombre: @Model.DatosSitio.ODBC_Name
+                    </p>
+                    <p>
+                        Servidor: @Model.DatosSitio.ODBC_Servidor
+                    </p>
+                    <p>
+                        Base de Datos: @Model.DatosSitio.ODBC_BD
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel @(Model.DatosSitio.BD ? "panel-success" : "panel-danger")">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="display: inline-block; height: 35px">Configuración Base de Datos</h3>
+                    @if (!Model.DatosSitio.BD)
+                    {
+                        <div class="btn-group pull-right" style="padding-bottom: 20px">
+                            <a href="#" class="btn btn-success" title="Arreglar"><span class="glyphicon glyphicon-refresh"></span></a>
+                        </div>
+                    }
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Path Tmp: @Model.DatosSitio.BD_Tmp
+                    </p>
+                    <p>
+                        Directorio Virtual: @Model.DatosSitio.BD_Virtual
+                    </p>
+                    <p>
+                        &nbsp;
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    function SelectedIndexChanged() {
+        //Form post
+        document.sitioForm.submit();
+    }
+
+    function ArreglarSitio() {
+        //Form post
+        document.arreglarINIForm.submit();
+    }
+</script>
