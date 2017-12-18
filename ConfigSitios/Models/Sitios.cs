@@ -63,7 +63,7 @@ namespace ConfigSitios.Models
                 ini_name = "pgm";
 
             parser = new FileIniDataParser();
-            data = parser.ReadFile($@"C:\Windows\{ini_name}.ini");
+            data = parser.ReadFile($@"C:\Windows\{ini_name}.ini", System.Text.Encoding.UTF8);
 
             INI_Servidor = data["Config"]["SERVIDOR_SQL"].ToUpper();
             INI_BD = data["Config"]["BASE_SQL"].ToUpper();
@@ -112,7 +112,7 @@ namespace ConfigSitios.Models
         public void ArrelgarINI()
         {
             data["MSSQL"]["PATH_TXT"] = $@"C:\Inetpub\wwwroot\{NombreSitio}\tmp";
-            parser.WriteFile($@"C:\Windows\{ini_name}.ini", data);
+            parser.WriteFile($@"C:\Windows\{ini_name}.ini", data, System.Text.Encoding.UTF8);
 
             LeerINI();
             ValidarINI();
@@ -154,10 +154,13 @@ namespace ConfigSitios.Models
 
         private string ObtenerConfigDB(string codigo)
         {
+            string clave = "";
+            Servidores.ObtenerServidores().TryGetValue(INI_Servidor.ToLower(), out clave);
+
             string sql = $"SELECT CONCEPTO FROM dbo.GLOBAL WHERE CODIGO = '{codigo}'";
             DataTable dt = new DataTable();
 
-            using (SqlConnection conn = new SqlConnection($"Server={INI_Servidor};Database={INI_BD};User Id=sa;Password=Profe109;"))
+            using (SqlConnection conn = new SqlConnection($"Server={INI_Servidor};Database={INI_BD};User Id=sa;Password={clave};"))
             {
                 using(SqlDataAdapter adap = new SqlDataAdapter(sql, conn))
                 {
